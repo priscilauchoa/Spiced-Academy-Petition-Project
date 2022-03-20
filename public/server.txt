@@ -1,0 +1,12 @@
+server express
+routes -> as rotas post vao precisar de queries pra colocar no banco de dados os dados do post.
+
+<form method="POST">
+      <input name="first">
+      <input name="last">
+      <input name="sig" type="hidden">
+      <button>submit</button>
+  </form>
+
+offsetX and offsetY - mousemoves -canvas
+toDataUrl - method from canvas pra salvar o desenho no caso assinatura
