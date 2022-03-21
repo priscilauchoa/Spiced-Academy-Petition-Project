@@ -2,7 +2,19 @@ canvas {
     border: solid violet;
 }
 
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1 {
+    text-align: center;
+    font-size: 25px;
+}
 .not-cool {
+    margin: 20px;
     width: 200px;
     height: 200px;
     background-image: url("./giphy.gif");
@@ -15,4 +27,22 @@ canvas {
     background-image: url("./thanks.gif");
     background-size: cover;
     background-position: center;
+}
+
+form {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    margin: 20px 0;
+    width: 300px;
+}
+label {
+    text-align: left;
+}
+
+body {
+    font-size: 25px;
 }

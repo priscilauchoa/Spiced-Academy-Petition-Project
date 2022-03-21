@@ -1,6 +1,10 @@
 (function () {
     let canvas = document.getElementById("canvas");
     // console.log("canvas---->>", canvas);
+    let submit = document.getElementsByClassName("submit");
+    let inputSig = document.getElementById("input-sig");
+
+    // console.log(inputSig);
     let c = canvas.getContext("2d");
     // console.log("canvas---->>", c);
     let draw = false;
@@ -16,8 +20,15 @@
         if (!draw) {
             return;
         }
-        c.strokeStyle = "red";
+        c.strokeStyle = "violet";
         c.lineTo(e.offsetX, e.offsetY);
         c.stroke();
     };
+
+    
+    submit.addEventListener("click", (e) => {
+        let dataURL = canvas.toDataURL(e);
+        inputSig.value = dataURL;
+    });
+    // console.log(canvas.toDataURL());
 })();

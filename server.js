@@ -3,7 +3,6 @@ const express = require("express");
 const app = express();
 const { engine } = require("express-handlebars");
 const secrets = require("./secret");
-
 const cookieSession = require("cookie-session");
 
 app.use(
@@ -23,45 +22,44 @@ app.use(
 
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
-
 app.use(express.static("./public"));
-
-app.post("/test", (req, res) => {
-    console.log("### GET headers", req.headers);
-    console.log("### GET body", req.body);
-
-    res.json({ success: true });
-});
-app.get("/test", (req, res) => {
-    console.log("--->> GET petition", req.headers);
-
-    res.json({ name: "Priscila" });
-});
-
 app.get("/petition", (req, res) => {
     res.render("petition", {
         layout: "main",
     });
 });
 
-app.get("/thanks", (req, res) => {
-    res.render("thanks", {});
-});
-
 app.post("/petition", function (req, res) {
-    console.log("### POST petition", req.body);
-    db.signPetition(req.body.first, req.body.last, req.body.sig)
-        .then(() => {
-            db.getPetition();
+    console.log("req.body: ", req.body);
+    db.signPetition(req.body.first, req.body.last, req.body.signature)
+        .then(({ rows }) => {
+            req.session.signature = rows[0].id;
             res.redirect("/thanks");
         })
         .catch((e) => {
             console.log("error--->", e);
             res.status(500).send(e.message);
-            // res.render("petition", {
-            //     layout: "main",
-            // });
+            res.render("petition", {
+                layout: "main",
+            });
         });
+});
+
+app.get("/thanks", (req, res) => {
+    db.getPetition(req.session.signature).then(({ rows }) => {
+        console.log("row get petition thanks get---->", rows);
+        res.render("thanks", {
+            // rows: rows,
+        });
+    });
+});
+
+app.get("/signers", (req, res) => {
+    db.getPetition().then((rows) => {
+        res.render("signers", {
+            rows: rows,
+        });
+    });
 });
 
 app.listen(8080, console.log("Listening 8080 🚪👂"));
