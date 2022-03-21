@@ -22,11 +22,12 @@ h1 {
 }
 
 .thanks {
-    width: 400px;
-    height: 400px;
-    background-image: url("./thanks.gif");
+    padding: 0;
     background-size: cover;
     background-position: center;
+    width: 600px;
+    height: 500px;
+    background-image: url("./thanks.gif");
 }
 
 form {
@@ -41,8 +42,45 @@ input {
 }
 label {
     text-align: left;
+    margin: 10px 0;
 }
 
 body {
     font-size: 25px;
+    background-color: rgb(243, 203, 243);
+}
+
+.sign-img {
+    border: solid rgb(99, 19, 99) 2px;
+    width: 300px;
+    height: 200px;
+    margin: 20px 0;
+    background-color: rgb(202, 227, 241);
+}
+button {
+    background-color: #a430c7; /* Green */
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.thanks-container {
+    margin: 40px;
+    text-align: center;
+}
+
+.signed {
+    text-align: center;
+}
+
+.home {
+    width: 50px;
+    height: 50px;
 }

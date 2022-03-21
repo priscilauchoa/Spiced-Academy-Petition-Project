@@ -10,6 +10,8 @@
     let draw = false;
     canvas.onmouseup = () => {
         draw = false;
+        let dataURL = canvas.toDataURL();
+        inputSig.value = dataURL;
         // let dataURL = $("#canvas").get(0).toDataURL();
         // console.log(dataURL);
     };
@@ -25,10 +27,6 @@
         c.stroke();
     };
 
-    
-    submit.addEventListener("click", (e) => {
-        let dataURL = canvas.toDataURL(e);
-        inputSig.value = dataURL;
-    });
+    submit.addEventListener("click", (e) => {});
     // console.log(canvas.toDataURL());
 })();

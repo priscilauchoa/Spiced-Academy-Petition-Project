@@ -33,7 +33,7 @@ app.post("/petition", function (req, res) {
     console.log("req.body: ", req.body);
     db.signPetition(req.body.first, req.body.last, req.body.signature)
         .then(({ rows }) => {
-            req.session.signature = rows[0].id;
+            req.session.id = rows[0].id;
             res.redirect("/thanks");
         })
         .catch((e) => {
@@ -46,10 +46,10 @@ app.post("/petition", function (req, res) {
 });
 
 app.get("/thanks", (req, res) => {
-    db.getPetition(req.session.signature).then(({ rows }) => {
+    db.getPetition(req.session.id).then(({ rows }) => {
         console.log("row get petition thanks get---->", rows);
         res.render("thanks", {
-            // rows: rows,
+            rows: rows,
         });
     });
 });

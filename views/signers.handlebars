@@ -1,16 +1,18 @@
 <h1>🌈 Signatures 🌈</h1>
 <div>
-    <br>
+    <br />
     <div><a href="">Signatures
-        <div class="signatures-list">
-        <ul> {{#rows}}
-             <li> 
-                 Name{{first}}{{last}}
-             </li>
-            {{/rows}}
-        </div></ul>
+            <div class="signatures-list">
+                <ul>
+                    {{#rows}}
+                        <li>
+                            Name{{first}}{{last}}
+                            <img src="{{signature}}" alt="" />
+                        </li>
+                    {{/rows}}
+                </ul>
+            </div>
         </a>
     </div>
-    
-    
+
 </div>
