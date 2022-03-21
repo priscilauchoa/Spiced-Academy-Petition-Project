@@ -1,14 +1,13 @@
 (function () {
     let canvas = document.getElementById("canvas");
-    console.log("canvas---->>", canvas);
+    // console.log("canvas---->>", canvas);
     let c = canvas.getContext("2d");
-    console.log("canvas---->>", c);
-
+    // console.log("canvas---->>", c);
     let draw = false;
     canvas.onmouseup = () => {
         draw = false;
-        var dataURL = $("#canvas").get(0).toDataURL();
-        console.log(dataURL);
+        // let dataURL = $("#canvas").get(0).toDataURL();
+        // console.log(dataURL);
     };
     canvas.onmousedown = () => {
         draw = true;

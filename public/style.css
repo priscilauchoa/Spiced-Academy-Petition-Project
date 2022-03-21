@@ -1,3 +1,18 @@
 canvas {
     border: solid violet;
 }
+
+.not-cool {
+    width: 200px;
+    height: 200px;
+    background-image: url("./giphy.gif");
+    background-size: cover;
+}
+
+.thanks {
+    width: 400px;
+    height: 400px;
+    background-image: url("./thanks.gif");
+    background-size: cover;
+    background-position: center;
+}
