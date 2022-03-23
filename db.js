@@ -1,7 +1,14 @@
 const spicedPg = require("spiced-pg");
 // const request = require("./public/request");
 // console.log(request);
-const db = spicedPg(`postgres:postgres:postgres@localhost:5432/petition`);
+//  spicedPg(`postgres:postgres:postgres@localhost:5432/petition`);
+const db =
+    process.env.DATABASE_URL ||
+    "postgres://spicedling:password@localhost:5432/petition";
+
+// let dbUrl =
+//     process.env.DATABASE_URL ||
+//     "postgres://spicedling:password@localhost:5432/petition";
 
 exports.signPetition = (user_id, sig) => {
     return db.query(
