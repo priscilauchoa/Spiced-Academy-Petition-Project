@@ -4,7 +4,7 @@ const spicedPg = require("spiced-pg");
 //  spicedPg(`postgres:postgres:postgres@localhost:5432/petition`);
 const db =
     process.env.DATABASE_URL ||
-    "postgres://spicedling:password@localhost:5432/petition";
+    spicedPg(`postgres:postgres:postgres@localhost:5432/petition`);
 
 // let dbUrl =
 //     process.env.DATABASE_URL ||
@@ -43,7 +43,7 @@ exports.registerUser = (first, last, email, password) => {
 
 exports.authenticateUser = (email) => {
     return db.query(
-        `SELECT password FROM users
+        `SELECT id, password FROM users
     WHERE email = $1`,
         [email]
     );

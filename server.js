@@ -5,18 +5,16 @@ const { engine } = require("express-handlebars");
 const secrets = require("./secret");
 const cookieSession = require("cookie-session");
 const { compare, hash } = require("./bc");
-const res = require("express/lib/response");
 
-app.use((re, res, next) => {
-    res.set("x-frame-option", "deny");
-    next(); //protege contra iframe no seu site. iframe é um site dentro do seu site.
-});
+// app.use((re, res, next) => {
+//     res.set("x-frame-option", "deny");
+//     next(); //protege contra iframe no seu site. iframe é um site dentro do seu site.
+// });
 
 app.use(
     cookieSession({
-        secret: secrets.SESS_SECRET,
+        secret: secrets.SESSION_SECRET,
         maxAge: 1000 * 60 * 60 * 24 * 14,
-        secure: true,
         sameSite: true,
     })
 );
@@ -47,12 +45,14 @@ app.post("/register", (req, res) => {
         .then((hashedPassword) => {
             // console.log("hashed password:", hashedPassword);
             // console.log(first, last, email);
-            return db.registerUser(first, last, email, hashedPassword);
-        })
-        .then(({ rows }) => {
-            console.log(rows);
-            req.session.userId = rows[0].id;
-            res.redirect("/petition");
+            db.registerUser(first, last, email, hashedPassword)
+                .then(({ rows }) => {
+                    console.log(rows);
+                    req.session.userId = rows[0].id;
+                    console.log(req.session);
+                    res.redirect("/petition");
+                })
+                .catch((err) => console.log(err));
         })
         .catch((err) => {
             console.log("error submitting registration values", err);
@@ -66,28 +66,24 @@ app.get("/login", (req, res) => {
 
 app.post("/login", function (req, res) {
     db.authenticateUser(req.body.email)
-        .then((rows) => {
-            // req.session.LogedId = rows[0].id;
-            // console.log(
-            //     "compare()---->>",
-            //     compare(req.body.password, rows[0].password)
-            // );
+        .then(({ rows }) => {
             // TODO : como comparar as senhas???? assim não funciona
-            compare(req.body.password, rows[0].password);
+            console.log(rows);
+            compare(req.body.password, rows[0].password).then((match) => {
+                console.log("Does the password match the one stored?", match);
+                req.session.userId = rows[0].id;
+
+                // If this value is true then set a cookie with the user's id
+                // something like req.session.userId.
+                // THEN: you will want to check if they have SIGNED
+                // If so, set another cookie to remember this and redirect them
+                // to the /thanks page, otherwise redirect them to then /petition page.
+                // If an error occurs, re-render the page with an appropriate message.
+            });
 
             // res.redirect("/petition");
         })
-        .then((match) => {
-            console.log("Does the password match the one stored?", match);
-            req.session.LogedId = match[0].id;
 
-            // If this value is true then set a cookie with the user's id
-            // something like req.session.userId.
-            // THEN: you will want to check if they have SIGNED
-            // If so, set another cookie to remember this and redirect them
-            // to the /thanks page, otherwise redirect them to then /petition page.
-            // If an error occurs, re-render the page with an appropriate message.
-        })
         // .then((rows) => {
         //     req.session.LogedId = rows[0].id;
         //     // res.redirect("/petition");
@@ -109,9 +105,11 @@ app.get("/petition", (req, res) => {
 });
 
 app.post("/petition", function (req, res) {
-    // console.log("--->>req.body: ", req.body);
+    console.log("--->>req.body: ", req.body);
+    console.log("--->>req.session: ", req.session.userId);
     db.signPetition(req.session.userId, req.body.signature)
-        .then(() => {
+        .then(({ rows }) => {
+            console.log("--->>rows in post petition: ", rows);
             // req.session.id = rows[0].id;
             res.redirect("/thanks");
         })
