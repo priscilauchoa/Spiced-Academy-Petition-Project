@@ -3,33 +3,41 @@ const spicedPg = require("spiced-pg");
 // console.log(request);
 const db = spicedPg(`postgres:postgres:postgres@localhost:5432/petition`);
 
-exports.signPetition = (first, last, sig) => {
+exports.signPetition = (user_id, sig) => {
     return db.query(
-        `INSERT INTO signatures (first, last, signature) VALUES ($1, $2, $3)
+        `INSERT INTO signatures (user_id, signature) VALUES ($1, $2)
         RETURNING id`,
-        [first, last, sig]
+        [user_id, sig]
     );
 };
 
-exports.getPetition = (id) => {
+exports.getSignatures = () => {
     return db.query(
-        `SELECT * FROM signatures
-    WHERE id = $1`,
-        [id]
+        `SELECT users.* FROM signatures JOIN users ON users.id = signatures.user_id`,
+        []
     );
 };
 
-// exports.getPetition = (first, last) => {
-//     console.log("--->> getPetition", first, last);
-//     return db
-//         .query(
-//             `SELECT * FROM signatures
-//         WHERE first = $1
-//         AND last = $2`,
-//             [first, last]
-//         )
-//         .then(({ rows }) => console.log("---->>rows", rows[0]))
-//         .catch((err) => console.log("ERROR!", err.message));
-// };
+exports.getSignatureByUserId = (userId) => {
+    return db.query(
+        `SELECT signature FROM signatures
+    WHERE user_id = $1`,
+        [userId]
+    );
+};
 
-// INSERT INTO signature (signature) VALUES ($1) RETURNING id;
+exports.registerUser = (first, last, email, password) => {
+    return db.query(
+        `INSERT INTO users (first, last, email, password ) VALUES ($1, $2, $3, $4)
+        RETURNING id`,
+        [first, last, email, password]
+    );
+};
+
+exports.authenticateUser = (email) => {
+    return db.query(
+        `SELECT password FROM users
+    WHERE email = $1`,
+        [email]
+    );
+};

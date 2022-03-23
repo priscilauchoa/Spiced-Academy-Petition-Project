@@ -1,5 +1,6 @@
 canvas {
     border: solid violet;
+    margin: 20px 0;
 }
 
 main {
@@ -36,10 +37,6 @@ form {
     flex-direction: column;
 }
 
-input {
-    margin: 20px 0;
-    width: 300px;
-}
 label {
     text-align: left;
     margin: 10px 0;
@@ -59,20 +56,24 @@ body {
 }
 button {
     background-color: #a430c7; /* Green */
-    border: none;
+    border-radius: 3px violet;
     color: white;
     padding: 16px 32px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+    font-size: 17px;
+    margin: 10px;
     transition-duration: 0.4s;
     cursor: pointer;
 }
+.div-button {
+    display: flex;
+    justify-content: space-between;
+    margin: 40px 0;
+}
 
 .thanks-container {
-    margin: 40px;
     text-align: center;
 }
 

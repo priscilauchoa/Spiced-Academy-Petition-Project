@@ -3,19 +3,18 @@
 <div>
     
     <div class="thanks-container">
-        <a href="http://localhost:8080/signers">See all signatures
+        <a href="/signers">See all signatures</a>
             <div class="signatures-list">
                 
                     {{#rows}}
                        <br>
-                           {{first}} {{last}}
                            <br>
                             <img class="sign-img" src="{{signature}}" alt="" />
                      
                     {{/rows}}
                 
             </div>
-        </a>
+        
     </div>
         {{!-- <button>Back to Petition</button> --}}
     </form>
