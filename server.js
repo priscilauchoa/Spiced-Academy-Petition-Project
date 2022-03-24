@@ -62,28 +62,20 @@ app.post("/register", (req, res) => {
 
 app.get("/login", (req, res) => {
     res.render("login");
+    req.session = null;
 });
 
 app.post("/login", function (req, res) {
     console.log("req.body------>>>", req.body);
     db.authenticateUser(req.body.email)
         .then(({ rows }) => {
-            console.log("rows authenticate user--->", rows);
-
+            // console.log("rows authenticate user--->", rows);
             return compare(req.body.password, rows[0].password).then(
                 (match) => {
-                    console.log(
-                        "Does the password match the one stored?",
-                        match
-                    );
-
                     if (match) {
                         req.session.userId = rows[0].id;
                     } else {
-                        res.redirect("/login", {
-                            wrongpassword: false,
-                        });
-                        // throw new Error("Password does not match");
+                        throw new Error("Password does not match");
                     }
                     console.log("ROWWWW----->", rows);
                     return rows;
@@ -95,6 +87,12 @@ app.post("/login", function (req, res) {
             //--->  let [first, second] = rows;//exemplo desestruturação de vetor
             if (rows[0].signature == null) {
                 res.redirect("/petition");
+                db.signPetitionLater(
+                    req.session.userId,
+                    req.body.signature
+                ).then(() => {
+                    res.redirect("/thanks");
+                });
             } else {
                 // signed = false;
                 res.redirect("/thanks");
@@ -106,9 +104,8 @@ app.post("/login", function (req, res) {
         })
         .catch((e) => {
             console.log("authentication error2--->", e);
-            // res.status(500).send(e.message);
-            res.redirect("/register", {
-                layout: "main",
+            res.render("login", {
+                err: "User not found",
             });
         });
 });
@@ -119,17 +116,19 @@ app.get("/profile", (req, res) => {
 
 app.post("/profile", (req, res) => {
     const { age, city, homepage } = req.body;
+    // if(homepage.indexOf('https'){
 
+    // }
     db.registerMoreInfo(req.session.userId, age, city, homepage)
         .then(() => {
             // console.log(req.session);
             res.redirect("/petition");
         })
-        .catch((err) => {
-            res.render({
-                err: "opps",
+        .catch(() => {
+            res.render("profile", {
+                err: "Invalid information, user alredy exists",
             });
-            console.log("error submitting registration values", err);
+            // console.log("error submitting registration values", err);
             // Re-render the same page with an error message
         });
 });
@@ -158,21 +157,30 @@ app.get("/petition", (req, res) => {
 });
 
 app.post("/petition", function (req, res) {
-    console.log("--->>req.body: ", req.body);
-    console.log("--->>req.session: ", req.session.userId);
-    db.signPetition(req.session.userId, req.body.signature)
-        .then(({ rows }) => {
-            console.log("--->>rows in post petition: ", rows);
-            req.session.id = rows[0].id;
-            res.redirect("/thanks");
-        })
-        .catch((e) => {
-            console.log("error3--->", e);
-            res.status(500).send(e.message);
-            res.render("petition", {
-                layout: "main",
+    if (req.body.signature == "") {
+        res.redirect("/home");
+    }
+    // console.log("--->>req.body: ", req.body);
+    // console.log("--->>req.session: ", req.session.userId);
+    else {
+        db.signPetition(req.session.userId, req.body.signature)
+            .then(({ rows }) => {
+                console.log("--->>rows in post petition: ", rows);
+                req.session.id = rows[0].id;
+                // if (rows[0].signature == "") {
+                //     res.redirect("/home");
+                // } else {
+                res.redirect("/thanks");
+                // }
+            })
+            .catch((e) => {
+                console.log("error3--->", e);
+                res.status(500).send(e.message);
+                res.render("petition", {
+                    layout: "main",
+                });
             });
-        });
+    }
 });
 
 app.get("/thanks", (req, res) => {
@@ -193,8 +201,8 @@ app.get("/signers", (req, res) => {
     });
 });
 
-app.get("//signers/berlin", (req, res) => {
-    // /signersbycities
+app.get("/signers/berlin", (req, res) => {
+    res.render("signersbycities", {});
 });
 
 app.listen(process.env.PORT || 8080, function () {

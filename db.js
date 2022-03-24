@@ -17,6 +17,13 @@ exports.signPetition = (user_id, sig) => {
         [user_id, sig]
     );
 };
+exports.signPetitionLater = (user_id, sig) => {
+    return db.query(
+        `INSERT INTO signatures (signature) VALUES ($2)
+        WHERE signatures.user_id $1`,
+        [user_id, sig]
+    );
+};
 
 exports.getSignatures = () => {
     return db.query(
