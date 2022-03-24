@@ -86,11 +86,7 @@ app.post("/login", function (req, res) {
             console.log("Signature ---->", rows);
             //--->  let [first, second] = rows;//exemplo desestruturação de vetor
             if (rows[0].signature == null) {
-                res.redirect("/petition");
-                db.signPetitionLater(
-                    req.session.userId,
-                    req.body.signature
-                ).then(() => {
+                res.redirect("/petition").then(() => {
                     res.redirect("/thanks");
                 });
             } else {
@@ -156,28 +152,22 @@ app.get("/petition", (req, res) => {
     }
 });
 
+// console.log("--->>req.body: ", req.body);
+// console.log("--->>req.session: ", req.session.userId);
+// else {
+
 app.post("/petition", function (req, res) {
-    if (req.body.signature == "") {
-        res.redirect("/home");
-    }
-    // console.log("--->>req.body: ", req.body);
-    // console.log("--->>req.session: ", req.session.userId);
-    else {
+    if (req.body.signature !== "") {
         db.signPetition(req.session.userId, req.body.signature)
             .then(({ rows }) => {
                 console.log("--->>rows in post petition: ", rows);
                 req.session.id = rows[0].id;
-                // if (rows[0].signature == "") {
-                //     res.redirect("/home");
-                // } else {
                 res.redirect("/thanks");
-                // }
             })
             .catch((e) => {
                 console.log("error3--->", e);
-                res.status(500).send(e.message);
                 res.render("petition", {
-                    layout: "main",
+                    err: "You already signed",
                 });
             });
     }
@@ -194,7 +184,7 @@ app.get("/thanks", (req, res) => {
 
 app.get("/signers", (req, res) => {
     db.getSignatures().then(({ rows }) => {
-        console.log("rows get signatures ---->", rows);
+        console.log("ALL SIGNERS ---->", rows);
         res.render("signers", {
             rows: rows,
         });
@@ -205,7 +195,7 @@ app.get("/signers/:city", (req, res) => {
     db.signersCity(req.params.city).then(({ rows }) => {
         res.render("signersbycities", {
             rows: rows,
-            link: req.body.url,
+            // link: req.body.url,
         });
     });
 });
