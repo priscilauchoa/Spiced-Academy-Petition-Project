@@ -205,6 +205,7 @@ app.get("/signers/:city", (req, res) => {
     db.signersCity(req.params.city).then(({ rows }) => {
         res.render("signersbycities", {
             rows: rows,
+            link: req.body.url,
         });
     });
 });
