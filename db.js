@@ -25,6 +25,13 @@ exports.signPetitionLater = (user_id, sig) => {
     );
 };
 
+exports.signersCity = (city) => {
+    return db.query(
+        `SELECT users.first, users.last, user_profiles.age, user_profiles.city, user_profiles.url FROM signatures JOIN users ON users.id = signatures.user_id JOIN user_profiles ON users.id = user_profiles.user_id WHERE LOWER(city) = LOWER ($1)`,
+        [city]
+    );
+};
+
 exports.getSignatures = () => {
     return db.query(
         `SELECT * FROM users JOIN signatures ON users.id = signatures.user_id JOIN user_profiles ON users.id = user_profiles.user_id`,

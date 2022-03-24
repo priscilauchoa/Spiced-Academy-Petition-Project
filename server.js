@@ -201,8 +201,12 @@ app.get("/signers", (req, res) => {
     });
 });
 
-app.get("/signers/berlin", (req, res) => {
-    res.render("signersbycities", {});
+app.get("/signers/:city", (req, res) => {
+    db.signersCity(req.params.city).then(({ rows }) => {
+        res.render("signersbycities", {
+            rows: rows,
+        });
+    });
 });
 
 app.listen(process.env.PORT || 8080, function () {
