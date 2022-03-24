@@ -9,6 +9,9 @@
         <input type="password" name="password"></input>
         <button class="submit" type="submit">submit</button>
     </form>
+    {{#if wrongpassword}}
+     <h2>User or password are wrong, please try again or register yourself</h2>
+  {{/if}}
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="./request.js"></script>
 </div>

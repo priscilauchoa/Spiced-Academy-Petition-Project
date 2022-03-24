@@ -1,0 +1,24 @@
+<h1>🌈 Tell me a little about yourself🌈</h1>
+<div class="not-cool"></div>
+<div>
+    {{#if signed}}
+     <h2>User not found, plase register yourself</h2>
+  {{/if}}
+  <p>{{err}}</p>
+    <form style="margin:50px" method="POST">
+       
+        <label for="age">Age</label>
+        <input type="text" name="age"></input>
+        <label for="city">City</label>
+        <input type="text" name="city"></input>
+        <label for="homepage">Home Page</label>
+        <input type="text" name="homepage"></input>
+        
+    <div class="div-button">
+        <button class="submit" type="submit">Save</button>
+    </div>
+    </form>
+      {{!-- <a href="/login"><button class="submit" type="submit">LOGIN</button></a>   --}}
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="./request.js"></script>
+</div>

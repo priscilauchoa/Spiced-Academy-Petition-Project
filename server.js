@@ -32,7 +32,7 @@ app.set("view engine", "handlebars");
 app.use(express.static("./public"));
 
 // hash("oi").then((hashPass) => {
-//     // console.log("hashpass", hashPass);
+//     console.log("hashpass", hashPass);
 // });
 
 app.get("/register", (req, res) => {
@@ -50,7 +50,7 @@ app.post("/register", (req, res) => {
                     console.log(rows);
                     req.session.userId = rows[0].id;
                     console.log(req.session);
-                    res.redirect("/petition");
+                    res.redirect("/profile");
                 })
                 .catch((err) => console.log(err));
         })
@@ -65,43 +65,96 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", function (req, res) {
+    console.log("req.body------>>>", req.body);
     db.authenticateUser(req.body.email)
         .then(({ rows }) => {
-            // TODO : como comparar as senhas???? assim não funciona
-            console.log(rows);
-            compare(req.body.password, rows[0].password).then((match) => {
-                console.log("Does the password match the one stored?", match);
-                req.session.userId = rows[0].id;
+            console.log("rows authenticate user--->", rows);
 
-                // If this value is true then set a cookie with the user's id
-                // something like req.session.userId.
-                // THEN: you will want to check if they have SIGNED
-                // If so, set another cookie to remember this and redirect them
-                // to the /thanks page, otherwise redirect them to then /petition page.
-                // If an error occurs, re-render the page with an appropriate message.
-            });
+            return compare(req.body.password, rows[0].password).then(
+                (match) => {
+                    console.log(
+                        "Does the password match the one stored?",
+                        match
+                    );
 
-            // res.redirect("/petition");
+                    if (match) {
+                        req.session.userId = rows[0].id;
+                    } else {
+                        res.redirect("/login", {
+                            wrongpassword: false,
+                        });
+                        // throw new Error("Password does not match");
+                    }
+                    console.log("ROWWWW----->", rows);
+                    return rows;
+                }
+            );
         })
-
-        // .then((rows) => {
-        //     req.session.LogedId = rows[0].id;
-        //     // res.redirect("/petition");
-        // })
+        .then((rows) => {
+            console.log("Signature ---->", rows);
+            //--->  let [first, second] = rows;//exemplo desestruturação de vetor
+            if (rows[0].signature == null) {
+                res.redirect("/petition");
+            } else {
+                // signed = false;
+                res.redirect("/thanks");
+                // res.render("/petition", {
+                //     layout: "main",
+                //     signed,
+                // });
+            }
+        })
         .catch((e) => {
-            console.log("error--->", e);
-            console.log("User not found, please register yourself");
-            res.status(500).send(e.message);
-            // res.redirect("/register", {
-            //     layout: "main",
-            // });
+            console.log("authentication error2--->", e);
+            // res.status(500).send(e.message);
+            res.redirect("/register", {
+                layout: "main",
+            });
         });
 });
 
+app.get("/profile", (req, res) => {
+    res.render("profile");
+});
+
+app.post("/profile", (req, res) => {
+    const { age, city, homepage } = req.body;
+
+    db.registerMoreInfo(req.session.userId, age, city, homepage)
+        .then(() => {
+            // console.log(req.session);
+            res.redirect("/petition");
+        })
+        .catch((err) => {
+            res.render({
+                err: "opps",
+            });
+            console.log("error submitting registration values", err);
+            // Re-render the same page with an error message
+        });
+});
+
+app.get("/home", (req, res) => {
+    res.render("home");
+});
+// comand + d = split vertical iterm
+//  comand + k = limpa terminal
+//  comand + [ muda de janela ]
+//command + shif + enter = full screen  no iterm
+// npm i -D nodemon and change package.json -- npm run dev
+
 app.get("/petition", (req, res) => {
-    res.render("petition", {
-        layout: "main",
-    });
+    if (req.session.userId) {
+        db.getSignatures(req.session.signedId).then((signatures) => {
+            res.render("petition", {
+                layout: "main",
+                signed: signatures.length > 0, //se tiver signature não mostra mensagem
+            });
+        });
+    } else {
+        // se nao estiver logado, ele nao deve ver petition
+        res.redirect("/login");
+    }
 });
 
 app.post("/petition", function (req, res) {
@@ -110,11 +163,11 @@ app.post("/petition", function (req, res) {
     db.signPetition(req.session.userId, req.body.signature)
         .then(({ rows }) => {
             console.log("--->>rows in post petition: ", rows);
-            // req.session.id = rows[0].id;
+            req.session.id = rows[0].id;
             res.redirect("/thanks");
         })
         .catch((e) => {
-            console.log("error--->", e);
+            console.log("error3--->", e);
             res.status(500).send(e.message);
             res.render("petition", {
                 layout: "main",
@@ -139,6 +192,11 @@ app.get("/signers", (req, res) => {
         });
     });
 });
+
+app.get("//signers/berlin", (req, res) => {
+    // /signersbycities
+});
+
 app.listen(process.env.PORT || 8080, function () {
     console.log("Listening 8080 🚪👂");
 });

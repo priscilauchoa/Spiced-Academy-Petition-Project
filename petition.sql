@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS signatures;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS user_profiles CASCADE;
+
 
 CREATE TABLE users (
     id              SERIAL PRIMARY KEY,
@@ -20,3 +22,11 @@ CREATE TABLE signatures (
 
 
 -- ambigous quando as duas tabelas tem o mesmo nome  vc precisa ser mais clara por exemplo: singers.id (coluna id na tabela singers)
+
+CREATE TABLE user_profiles(
+id SERIAL PRIMARY KEY,
+age INT,
+city VARCHAR(255),
+url VARCHAR(255),
+user_id INT NOT NULL REFERENCES users(id)
+);

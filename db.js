@@ -20,7 +20,8 @@ exports.signPetition = (user_id, sig) => {
 
 exports.getSignatures = () => {
     return db.query(
-        `SELECT users.* FROM signatures JOIN users ON users.id = signatures.user_id`,
+        `SELECT * FROM users JOIN signatures ON users.id = signatures.user_id JOIN user_profiles ON users.id = user_profiles.user_id`,
+        // `SELECT users.* FROM signatures JOIN users ON users.id = signatures.user_id`,
         []
     );
 };
@@ -41,10 +42,20 @@ exports.registerUser = (first, last, email, password) => {
     );
 };
 
+exports.registerMoreInfo = (user_id, age, city, homepage) => {
+    return db.query(
+        `INSERT INTO user_profiles (user_id, age, city, url ) VALUES ($1, $2, $3, $4)`,
+        [user_id, age, city, homepage]
+    );
+};
+
 exports.authenticateUser = (email) => {
     return db.query(
-        `SELECT id, password FROM users
-    WHERE email = $1`,
+        `SELECT users.password, users.id, signatures.signature AS signature
+FROM users
+FULL JOIN signatures
+ON users.id = signatures.user_id
+WHERE users.email = $1`,
         [email]
     );
 };
