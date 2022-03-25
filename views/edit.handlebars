@@ -1,0 +1,30 @@
+<h1>🌈 EDIT YOUR INFORMATIONS🌈</h1>
+
+<div>
+   {{#rows}}
+    <form method="POST">
+        <label for="first">First Name</label>
+        <input type="text" name="first" value="{{first}}"></input>
+        <label for="last">Last Name</label>
+        <input type="text" name="last" value="{{last}}"></input>
+        <label for="email">Email</label>
+        <input type="email" name="email" value="email"></input>
+        <label for="password">Password</label>
+        <input type="password" name="password" value="password"></input>
+        <label for="age">Age</label>
+        <input type="text" name="age" value="age"></input>
+        <label for="city">City</label>
+        <input type="text" name="city" value="city"></input>
+        <label for="url">Home Page</label>
+        <input type="url" name="homepage" value="homepage"></input>
+        {{! <input name="password" value="trustno1" /> }}
+        
+    <div class="div-button">
+        <button class="submit" type="submit">REGISTER</button>
+    </div>
+    </form>
+    {{/rows}}
+      <a href="/login"><button class="submit" type="submit">LOGIN</button></a>  
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="./request.js"></script>
+</div>

@@ -1,6 +1,6 @@
 canvas {
     border: solid violet;
-    margin: 20px 0;
+    /* margin: 20px 0; */
 }
 
 main {
@@ -15,10 +15,11 @@ h1 {
     font-size: 25px;
 }
 .not-cool {
-    margin: 20px;
+    /* margin: 20px; */
     width: 200px;
     height: 200px;
-    background-image: url("./giphy.gif");
+    /* background-image: url("./giphy.gif"); */
+    background-image: url("./beyonce-beer.gif");
     background-size: cover;
 }
 
@@ -28,7 +29,8 @@ h1 {
     background-position: center;
     width: 600px;
     height: 500px;
-    background-image: url("./thanks.gif");
+    /* background-image: url("./thanks.gif"); */
+    background-image: url("./giphy\ \(1\).gif");
 }
 
 form {
@@ -44,7 +46,8 @@ label {
 
 body {
     font-size: 25px;
-    background-color: rgb(243, 203, 243);
+    background-color: rgb(115, 216, 174);
+    color: rgb(255, 255, 255);
 }
 
 .sign-img {

@@ -5,11 +5,12 @@ const { engine } = require("express-handlebars");
 const secrets = require("./secret");
 const cookieSession = require("cookie-session");
 const { compare, hash } = require("./bc");
-
-// app.use((re, res, next) => {
-//     res.set("x-frame-option", "deny");
-//     next(); //protege contra iframe no seu site. iframe é um site dentro do seu site.
-// });
+const {
+    requireLoggedOutUser,
+    requireLoggedInUser,
+    requireNoSignature,
+    requireSignature,
+} = require("./middleware");
 
 app.use(
     cookieSession({
@@ -35,16 +36,18 @@ app.use(express.static("./public"));
 //     console.log("hashpass", hashPass);
 // });
 
-app.get("/register", (req, res) => {
+app.get("/home", (req, res) => {
+    res.render("home");
+});
+
+app.get("/register", requireLoggedOutUser, (req, res) => {
     res.render("register");
 });
 
-app.post("/register", (req, res) => {
+app.post("/register", requireLoggedOutUser, (req, res) => {
     const { first, last, email, password } = req.body;
     hash(password)
         .then((hashedPassword) => {
-            // console.log("hashed password:", hashedPassword);
-            // console.log(first, last, email);
             db.registerUser(first, last, email, hashedPassword)
                 .then(({ rows }) => {
                     console.log(rows);
@@ -56,20 +59,18 @@ app.post("/register", (req, res) => {
         })
         .catch((err) => {
             console.log("error submitting registration values", err);
-            // Re-render the same page with an error message
         });
 });
 
-app.get("/login", (req, res) => {
+app.get("/login", requireLoggedOutUser, (req, res) => {
     res.render("login");
     req.session = null;
 });
 
-app.post("/login", function (req, res) {
+app.post("/login", requireLoggedOutUser, function (req, res) {
     console.log("req.body------>>>", req.body);
     db.authenticateUser(req.body.email)
         .then(({ rows }) => {
-            // console.log("rows authenticate user--->", rows);
             return compare(req.body.password, rows[0].password).then(
                 (match) => {
                     if (match) {
@@ -84,18 +85,12 @@ app.post("/login", function (req, res) {
         })
         .then((rows) => {
             console.log("Signature ---->", rows);
-            //--->  let [first, second] = rows;//exemplo desestruturação de vetor
             if (rows[0].signature == null) {
                 res.redirect("/petition").then(() => {
                     res.redirect("/thanks");
                 });
             } else {
-                // signed = false;
                 res.redirect("/thanks");
-                // res.render("/petition", {
-                //     layout: "main",
-                //     signed,
-                // });
             }
         })
         .catch((e) => {
@@ -112,9 +107,7 @@ app.get("/profile", (req, res) => {
 
 app.post("/profile", (req, res) => {
     const { age, city, homepage } = req.body;
-    // if(homepage.indexOf('https'){
 
-    // }
     db.registerMoreInfo(req.session.userId, age, city, homepage)
         .then(() => {
             // console.log(req.session);
@@ -129,39 +122,18 @@ app.post("/profile", (req, res) => {
         });
 });
 
-app.get("/home", (req, res) => {
-    res.render("home");
-});
-// comand + d = split vertical iterm
-//  comand + k = limpa terminal
-//  comand + [ muda de janela ]
-//command + shif + enter = full screen  no iterm
-// npm i -D nodemon and change package.json -- npm run dev
-
-app.get("/petition", (req, res) => {
-    if (req.session.userId) {
-        db.getSignatures(req.session.signedId).then((signatures) => {
-            res.render("petition", {
-                layout: "main",
-                signed: signatures.length > 0, //se tiver signature não mostra mensagem
-            });
-        });
-    } else {
-        // se nao estiver logado, ele nao deve ver petition
-        res.redirect("/login");
-    }
+app.get("/petition", requireNoSignature, (req, res) => {
+    res.render("petition", {
+        layout: "main",
+    });
 });
 
-// console.log("--->>req.body: ", req.body);
-// console.log("--->>req.session: ", req.session.userId);
-// else {
-
-app.post("/petition", function (req, res) {
+app.post("/petition", requireNoSignature, function (req, res) {
     if (req.body.signature !== "") {
         db.signPetition(req.session.userId, req.body.signature)
             .then(({ rows }) => {
-                console.log("--->>rows in post petition: ", rows);
-                req.session.id = rows[0].id;
+                // console.log("--->>rows in post petition: ", rows);
+                req.session.sigId = rows[0].id;
                 res.redirect("/thanks");
             })
             .catch((e) => {
@@ -173,7 +145,7 @@ app.post("/petition", function (req, res) {
     }
 });
 
-app.get("/thanks", (req, res) => {
+app.get("/thanks", requireSignature, (req, res) => {
     db.getSignatureByUserId(req.session.userId).then(({ rows }) => {
         console.log("row get petition thanks get---->", rows);
         res.render("thanks", {
@@ -182,7 +154,7 @@ app.get("/thanks", (req, res) => {
     });
 });
 
-app.get("/signers", (req, res) => {
+app.get("/signers", requireSignature, (req, res) => {
     db.getSignatures().then(({ rows }) => {
         console.log("ALL SIGNERS ---->", rows);
         res.render("signers", {
@@ -191,11 +163,21 @@ app.get("/signers", (req, res) => {
     });
 });
 
-app.get("/signers/:city", (req, res) => {
+app.get("/signers/:city", requireSignature, (req, res) => {
     db.signersCity(req.params.city).then(({ rows }) => {
         res.render("signersbycities", {
             rows: rows,
+            layout: "signerscity",
             // link: req.body.url,
+        });
+    });
+});
+
+app.get("/edit", requireSignature, (req, res) => {
+    db.getSignatures().then(({ rows }) => {
+        console.log("ALL SIGNERS ---->", rows);
+        res.render("edit", {
+            rows: rows[0],
         });
     });
 });
