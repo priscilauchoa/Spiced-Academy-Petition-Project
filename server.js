@@ -37,7 +37,10 @@ app.use(express.static("./public"));
 // });
 
 app.get("/home", (req, res) => {
-    res.render("home");
+    let logged = req.session.userId;
+    res.render("home", {
+        logged,
+    });
 });
 
 app.get("/register", requireLoggedOutUser, (req, res) => {
@@ -64,34 +67,23 @@ app.post("/register", requireLoggedOutUser, (req, res) => {
 
 app.get("/login", requireLoggedOutUser, (req, res) => {
     res.render("login");
-    req.session = null;
 });
 
 app.post("/login", requireLoggedOutUser, function (req, res) {
-    console.log("req.body------>>>", req.body);
+    // console.log("req.body------>>>", req.body);
     db.authenticateUser(req.body.email)
         .then(({ rows }) => {
-            return compare(req.body.password, rows[0].password).then(
-                (match) => {
-                    if (match) {
-                        req.session.userId = rows[0].id;
-                    } else {
-                        throw new Error("Password does not match");
-                    }
-                    console.log("ROWWWW----->", rows);
-                    return rows;
-                }
-            );
-        })
-        .then((rows) => {
-            console.log("Signature ---->", rows);
-            if (rows[0].signature == null) {
-                res.redirect("/petition").then(() => {
+            // return compare(req.body.password, rows[0].password).then(
+            compare(req.body.password, rows[0].password).then((match) => {
+                req.session.userId = rows[0].id;
+                if (!rows[0].signature) {
+                    res.redirect("/petition");
+                } else {
+                    req.session.sigId = rows[0].id;
                     res.redirect("/thanks");
-                });
-            } else {
-                res.redirect("/thanks");
-            }
+                }
+                console.log("ROWWWW----->", rows);
+            });
         })
         .catch((e) => {
             console.log("authentication error2--->", e);
@@ -99,6 +91,11 @@ app.post("/login", requireLoggedOutUser, function (req, res) {
                 err: "User not found",
             });
         });
+});
+
+app.post("/home/logout", (req, res) => {
+    req.session = null;
+    res.redirect("/home");
 });
 
 app.get("/profile", (req, res) => {
@@ -122,41 +119,50 @@ app.post("/profile", (req, res) => {
         });
 });
 
-app.get("/petition", requireNoSignature, (req, res) => {
+app.get("/petition", requireLoggedInUser, requireNoSignature, (req, res) => {
     res.render("petition", {
         layout: "main",
     });
 });
 
-app.post("/petition", requireNoSignature, function (req, res) {
-    if (req.body.signature !== "") {
-        db.signPetition(req.session.userId, req.body.signature)
-            .then(({ rows }) => {
-                // console.log("--->>rows in post petition: ", rows);
-                req.session.sigId = rows[0].id;
-                res.redirect("/thanks");
-            })
-            .catch((e) => {
-                console.log("error3--->", e);
-                res.render("petition", {
-                    err: "You already signed",
+app.post(
+    "/petition",
+    requireLoggedInUser,
+    requireNoSignature,
+    function (req, res) {
+        if (req.body.signature !== "") {
+            db.signPetition(req.session.userId, req.body.signature)
+                .then(({ rows }) => {
+                    // console.log("--->>rows in post petition: ", rows);
+                    req.session.sigId = rows[0].id;
+                    res.redirect("/thanks");
+                })
+                .catch((e) => {
+                    console.log("error3--->", e);
+                    res.render("petition", {
+                        err: "You already signed",
+                    });
                 });
-            });
+        }
     }
-});
+);
 
-app.get("/thanks", requireSignature, (req, res) => {
+app.get("/thanks", requireLoggedInUser, requireSignature, (req, res) => {
     db.getSignatureByUserId(req.session.userId).then(({ rows }) => {
         console.log("row get petition thanks get---->", rows);
+        // let numberOfSigners = rows.length;
+        // console.log(numberOfSigners);
         res.render("thanks", {
             rows: rows,
+            // numberOfSigners,
         });
     });
 });
 
 app.get("/signers", requireSignature, (req, res) => {
     db.getSignatures().then(({ rows }) => {
-        console.log("ALL SIGNERS ---->", rows);
+        console.log("ALL SIGNERS ---->", rows.length);
+
         res.render("signers", {
             rows: rows,
         });

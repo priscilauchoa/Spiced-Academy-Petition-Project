@@ -3,20 +3,22 @@
 <div>
     
     <div class="thanks-container">
-        <a href="/signers">See all signatures</a>
             <div class="signatures-list">
                 
+        <a href="/signers">See all {{numberOfSigners}} signatures</a>   
                     {{#rows}}
                        <br>
                            <br>
                             <img class="sign-img" src="{{signature}}" alt="" />
                      
                     {{/rows}}
-                
             </div>
         
     </div>
         {{!-- <button>Back to Petition</button> --}}
+        <form method="POST" action="/home/logout">
+                    <button style="background-color: rgb(241, 117, 117);">Delete signature</button>
+                </form>
     </form>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </div>
