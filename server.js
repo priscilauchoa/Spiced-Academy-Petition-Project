@@ -98,7 +98,7 @@ app.post("/home/logout", (req, res) => {
     res.redirect("/home");
 });
 
-app.get("/profile", (req, res) => {
+app.get("/profile", requireLoggedInUser, (req, res) => {
     res.render("profile");
 });
 
