@@ -6,10 +6,6 @@ const db =
     process.env.DATABASE_URL ||
     spicedPg(`postgres:postgres:postgres@localhost:5432/petition`);
 
-// let dbUrl =
-//     process.env.DATABASE_URL ||
-//     "postgres://spicedling:password@localhost:5432/petition";
-
 exports.signPetition = (user_id, sig) => {
     return db.query(
         `INSERT INTO signatures (user_id, signature) VALUES ($1, $2)
@@ -17,6 +13,15 @@ exports.signPetition = (user_id, sig) => {
         [user_id, sig]
     );
 };
+
+exports.updateSignature = (user_id, sig) => {
+    return db.query(
+        `UPDATE signatures SET signature = $2 WHERE signatures.user_id = $1      
+        RETURNING id`,
+        [user_id, sig]
+    );
+};
+
 exports.signPetitionLater = (user_id, sig) => {
     return db.query(
         `INSERT INTO signatures (signature) VALUES ($2)
@@ -63,6 +68,12 @@ exports.registerMoreInfo = (user_id, age, city, homepage) => {
     );
 };
 
+exports.deleteSignature = (user_id) => {
+    return db.query(`DELETE FROM signatures WHERE signatures.user_id = $1`, [
+        user_id,
+    ]);
+};
+
 exports.authenticateUser = (email) => {
     return db.query(
         `SELECT users.password, users.id, signatures.signature AS signature
@@ -73,3 +84,4 @@ WHERE users.email = $1`,
         [email]
     );
 };
+    

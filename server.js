@@ -82,11 +82,11 @@ app.post("/login", requireLoggedOutUser, function (req, res) {
                     req.session.sigId = rows[0].id;
                     res.redirect("/thanks");
                 }
-                console.log("ROWWWW----->", rows);
+                // console.log("ROWWWW----->", rows);
             });
         })
         .catch((e) => {
-            console.log("authentication error2--->", e);
+            // console.log("authentication error2--->", e);
             res.render("login", {
                 err: "User not found",
             });
@@ -133,12 +133,12 @@ app.post(
         if (req.body.signature !== "") {
             db.signPetition(req.session.userId, req.body.signature)
                 .then(({ rows }) => {
-                    // console.log("--->>rows in post petition: ", rows);
+                    // zconsole.log("--->>rows in post petition: ", rows);
                     req.session.sigId = rows[0].id;
                     res.redirect("/thanks");
                 })
                 .catch((e) => {
-                    console.log("error3--->", e);
+                    // console.log("error3--->", e);
                     res.render("petition", {
                         err: "You already signed",
                     });
@@ -149,7 +149,7 @@ app.post(
 
 app.get("/thanks", requireLoggedInUser, requireSignature, (req, res) => {
     db.getSignatureByUserId(req.session.userId).then(({ rows }) => {
-        console.log("row get petition thanks get---->", rows);
+        // console.log("row get petition thanks get---->", rows);
         // let numberOfSigners = rows.length;
         // console.log(numberOfSigners);
         res.render("thanks", {
@@ -161,8 +161,8 @@ app.get("/thanks", requireLoggedInUser, requireSignature, (req, res) => {
 
 app.get("/signers", requireSignature, (req, res) => {
     db.getSignatures().then(({ rows }) => {
-        console.log("ALL SIGNERS ---->", rows.length);
-
+        // console.log("ALL SIGNERS ---->", rows.length);
+        console.log("ALL SIGNERS ---->", rows);
         res.render("signers", {
             rows: rows,
         });
@@ -181,11 +181,25 @@ app.get("/signers/:city", requireSignature, (req, res) => {
 
 app.get("/edit", requireSignature, (req, res) => {
     db.getSignatures().then(({ rows }) => {
-        console.log("ALL SIGNERS ---->", rows);
         res.render("edit", {
             rows: rows[0],
         });
     });
+});
+
+app.post("/petition/deletesignature", (req, res) => {
+    db.deleteSignature(req.session.userId)
+        .then(({ rows }) => {
+            // console.log("rows.signature----->>>>", req.session.sigId);
+            req.session.sigId = null;
+            res.redirect("/petition");
+        })
+        .catch((e) => {
+            console.log("error3--->", e);
+            res.render("petition", {
+                err: "You already signed",
+            });
+        });
 });
 
 app.listen(process.env.PORT || 8080, function () {
