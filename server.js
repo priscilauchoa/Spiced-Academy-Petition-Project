@@ -118,6 +118,21 @@ app.post("/profile", (req, res) => {
             // Re-render the same page with an error message
         });
 });
+app.post("/profile/deleteuser", (req, res) => {
+    db.deleteSignature(req.session.userId)
+        .then(() => db.deleteProfile(req.session.userId))
+        .then(() => db.deleteUser(req.session.userId))
+        .then(() => {
+            req.session = null;
+            res.redirect("/register");
+        })
+        .catch((e) => {
+            console.log("ERROR deleting profile", e);
+            res.render("profile", {
+                err: "Profile can not be deleted",
+            });
+        });
+});
 
 app.get("/petition", requireLoggedInUser, requireNoSignature, (req, res) => {
     res.render("petition", {
@@ -149,12 +164,17 @@ app.post(
 
 app.get("/thanks", requireLoggedInUser, requireSignature, (req, res) => {
     db.getSignatureByUserId(req.session.userId).then(({ rows }) => {
-        // console.log("row get petition thanks get---->", rows);
-        // let numberOfSigners = rows.length;
-        // console.log(numberOfSigners);
         res.render("thanks", {
             rows: rows,
-            // numberOfSigners,
+        });
+    });
+});
+
+app.get("/edit", requireLoggedInUser, requireSignature, (req, res) => {
+    console.log("req.session.userId", req.session.userId);
+    db.getUserInfo(req.session.userId).then(({ rows }) => {
+        res.render("edit", {
+            rows: rows,
         });
     });
 });
@@ -162,7 +182,6 @@ app.get("/thanks", requireLoggedInUser, requireSignature, (req, res) => {
 app.get("/signers", requireSignature, (req, res) => {
     db.getSignatures().then(({ rows }) => {
         // console.log("ALL SIGNERS ---->", rows.length);
-        console.log("ALL SIGNERS ---->", rows);
         res.render("signers", {
             rows: rows,
         });
@@ -175,14 +194,6 @@ app.get("/signers/:city", requireSignature, (req, res) => {
             rows: rows,
             layout: "signerscity",
             // link: req.body.url,
-        });
-    });
-});
-
-app.get("/edit", requireSignature, (req, res) => {
-    db.getSignatures().then(({ rows }) => {
-        res.render("edit", {
-            rows: rows[0],
         });
     });
 });

@@ -40,8 +40,13 @@ exports.signersCity = (city) => {
 exports.getSignatures = () => {
     return db.query(
         `SELECT * FROM users JOIN signatures ON users.id = signatures.user_id JOIN user_profiles ON users.id = user_profiles.user_id`,
-        // `SELECT users.* FROM signatures JOIN users ON users.id = signatures.user_id`,
         []
+    );
+};
+exports.getUserInfo = (id) => {
+    return db.query(
+        `SELECT * FROM users JOIN signatures ON users.id = signatures.user_id JOIN user_profiles ON users.id = user_profiles.user_id WHERE users.id = $1`,
+        [id]
     );
 };
 
@@ -68,10 +73,27 @@ exports.registerMoreInfo = (user_id, age, city, homepage) => {
     );
 };
 
+// exports.getUserInfo = (user_id) => {
+//     return db.query(
+//         `SELECT * FROM users JOIN signatures ON users.id = signatures.user_id JOIN user_profiles ON users.id = user_profiles.user_id`,
+//         [user_id]
+//     );
+// };
+
 exports.deleteSignature = (user_id) => {
     return db.query(`DELETE FROM signatures WHERE signatures.user_id = $1`, [
         user_id,
     ]);
+};
+exports.deleteProfile = (user_id) => {
+    return db.query(
+        `DELETE FROM user_profiles WHERE user_profiles.user_id = $1`,
+        [user_id]
+    );
+};
+
+exports.deleteUser = (user_id) => {
+    return db.query(`DELETE FROM users WHERE id = $1`, [user_id]);
 };
 
 exports.authenticateUser = (email) => {
@@ -84,4 +106,3 @@ WHERE users.email = $1`,
         [email]
     );
 };
-    
