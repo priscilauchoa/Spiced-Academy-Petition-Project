@@ -1,9 +1,9 @@
-const db = require("./db");
 const express = require("express");
 const app = express();
 const { engine } = require("express-handlebars");
 const cookieSession = require("cookie-session");
 const { compare, hash } = require("./bc");
+const db = require("./db");
 const {
     requireLoggedOutUser,
     requireLoggedInUser,
@@ -56,15 +56,14 @@ app.post("/register", requireLoggedOutUser, (req, res) => {
     const { first, last, email, password } = req.body;
     hash(password)
         .then((hashedPassword) => {
-            return db
-                .registerUser(first, last, email, hashedPassword)
+            db.registerUser(first, last, email, hashedPassword)
                 .then(({ rows }) => {
                     console.log(rows);
                     req.session.userId = rows[0].id;
                     console.log(req.session);
                     res.redirect("/profile");
                 })
-                .catch((err) => console.log(err));
+                .catch((err) => console.log("err in registeruser", err));
         })
         .catch((err) => {
             console.log("error submitting registration values", err);
