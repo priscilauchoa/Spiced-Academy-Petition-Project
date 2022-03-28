@@ -41,6 +41,7 @@ app.use(express.static("./public"));
 app.get("/", (req, res) => {
     res.redirect("/home");
 });
+
 app.get("/home", (req, res) => {
     let logged = req.session.userId;
     res.render("home", {
@@ -225,6 +226,11 @@ app.get("/edit/done", (req, res) => {
 app.get("/signers", requireLoggedInUser, requireSignature, (req, res) => {
     db.getSignatures().then(({ rows }) => {
         // console.log("ALL SIGNERS ---->", rows.length);
+
+        if (rows[0].url == "") {
+            rows[0].url = "home";
+        }
+
         res.render("signers", {
             rows: rows,
         });
@@ -254,6 +260,12 @@ app.post("/petition/deletesignature", (req, res) => {
                 err: "You already signed",
             });
         });
+});
+
+app.get("*", (req, res) => {
+    res.render("notfound", {
+        err: "404 Not Found",
+    });
 });
 
 app.listen(process.env.PORT || 8080, function () {

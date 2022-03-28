@@ -1,24 +1,80 @@
+html {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Montserrat", sans-serif;
+    font-family: "Roboto", sans-serif;
+    font-weight: lighter;
+}
 canvas {
     border: solid violet;
     margin: 20px 0;
 }
 
-main {
+.home-menu {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     align-items: center;
+    align-content: center;
+    justify-content: space-between;
+}
+#logout {
+    background-color: Transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    color: white;
+    text-decoration: underline;
+    overflow: hidden;
+    outline: none;
+}
+#logout:after {
+    content: "";
+    color: white;
+    background-color: transparent;
 }
 
+a {
+    color: white;
+    padding: 10px;
+}
+main {
+    display: flex;
+    padding: 40px;
+    justify-content: center;
+    border-radius: 10px;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(20, 18, 18, 0.836);
+    backdrop-filter: blur(1.5px);
+    -webkit-backdrop-filter: blur(1.5px);
+}
+
+.nav-main {
+    padding: 0%;
+    margin: 20px 0;
+}
 h1 {
+    font-weight: lighter;
     text-align: center;
     font-size: 25px;
 }
+h3 {
+    font-weight: lighter;
+    text-align: center;
+    font-size: 25px;
+}
+
+p {
+    font-weight: lighter;
+    text-align: center;
+    font-size: 20px;
+}
+
 .not-cool {
     margin: 20px;
     width: 200px;
     height: 200px;
-    background-image: url("./giphy.gif");
+    background-image: url("./beyonce-beer.gif");
     background-size: cover;
 }
 
@@ -28,7 +84,6 @@ h1 {
     background-position: center;
     width: 600px;
     height: 500px;
-    background-image: url("./thanks.gif");
     background-image: url("./thanks.gif");
 }
 
@@ -44,27 +99,15 @@ label {
 }
 
 body {
+    width: 60%;
+    height: 700px;
+    align-items: center;
     font-size: 25px;
-    background-color: rgb(187, 240, 218);
+    background-color: rgb(151, 241, 204);
     cursor: url("./pen.png"), default;
+    background-image: url("./bc-photo.jpeg");
+    background-size: cover;
     color: white;
-    color: #2ea15a;
-}
-
-.logout {
-    background-color: transparent; /* Green */
-    border-radius: none;
-    border: none;
-    text-decoration: underline;
-    color: rgb(0, 0, 0);
-    padding: 16px 32px;
-    text-align: center;
-    /* text-decoration: none; */
-    display: inline-block;
-    font-size: 20px;
-    margin: 10px;
-    transition-duration: 0.4s;
-    cursor: pointer;
 }
 
 .sign-img {
@@ -81,7 +124,7 @@ button {
     letter-spacing: 1px;
     padding: 13px 20px 13px;
     outline: 0;
-    border: 1px solid black;
+    border: 1px solid rgb(255, 255, 255);
     cursor: pointer;
     position: relative;
     background-color: rgba(0, 0, 0, 0);
@@ -93,7 +136,6 @@ button {
 button:after {
     content: "";
     color: white;
-
     background-color: #5acf87;
     width: 100%;
     z-index: -1;
@@ -132,4 +174,12 @@ button:hover:after {
 .home {
     width: 50px;
     height: 50px;
+    background-color: transparent;
+}
+
+input {
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid white;
+    margin: 2px;
 }
