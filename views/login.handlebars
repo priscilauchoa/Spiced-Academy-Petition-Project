@@ -4,12 +4,12 @@
 <p> {{err}}</p>
     <form method="POST">
         <label for="email">E-mail Adreess</label>
-        <input type="text" name="email"></input>
+        <input class="input-list" type="text" name="email"></input>
         <label for="password">Password</label>
-        <input type="password" name="password"></input>
-        <button class="submit" type="submit">submit</button>
+        <input class="input-list" type="password" name="password"></input>
+        <button style="margin-top:55px;" class="submit" type="submit">submit</button>
     </form>
-    <a href="/register"><button class="submit" type="submit">Register</button></a>
+    <a href="/register"><button style="margin-top:25px;" class="submit" type="submit">Register</button></a>
 
     {{#if wrongpassword}}
      <h2>User or password are wrong, please try again or register yourself</h2>

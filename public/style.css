@@ -10,24 +10,28 @@ canvas {
     border: 1px solid rgb(255, 255, 255);
     margin: 20px 0;
 }
+.register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+form {
+    margin: 0;
+}
 
 .home-menu {
     display: flex;
     align-items: center;
-    align-content: center;
     justify-content: space-between;
+    margin: 20px 0;
 }
 #logout {
-    /* background-color: Transparent;
-    background-repeat: no-repeat; */
-    /* background-image: url("./logout.png"); */
+    padding: 0;
     border: none;
-    width: 40px;
     cursor: pointer;
-    color: white;
+    color: rgb(116, 115, 115);
     text-decoration: underline;
-    /* overflow: hidden;
-    outline: none; */
 }
 #logout:after {
     content: "";
@@ -37,7 +41,6 @@ canvas {
 
 a {
     color: white;
-    /* padding: 10px; */
 }
 main {
     display: flex;
@@ -52,12 +55,12 @@ main {
 }
 
 .nav-main {
-    padding: 0%;
-    display: flex;
-    margin: 20px 0;
-    justify-content: space-between;
-    /* background-color: rgba(0, 0, 0, 0.301); */
     border-radius: 5px;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
 }
 h1 {
     font-weight: lighter;
@@ -91,6 +94,7 @@ p {
 
 .thanks {
     padding: 0;
+    margin-bottom: 40px;
     background-size: cover;
     background-position: center;
     width: 500px;
@@ -99,7 +103,6 @@ p {
 }
 
 form {
-    /* margin: 20px; */
     display: flex;
     flex-direction: column;
 }
@@ -114,7 +117,7 @@ body {
     height: 700px;
     align-items: center;
     font-size: 25px;
-    background-color: rgb(151, 241, 204);
+    background-color: rgba(151, 241, 204, 0.199);
     cursor: url("./pen.png"), default;
     background-image: url("./bc-photo.jpeg");
     background-size: cover;
@@ -128,10 +131,8 @@ body {
 }
 
 .sign-img {
-    border: 1px solid rgb(255, 255, 255) 2px;
     width: 300px;
-    height: 100px;
-    margin: 40px 0;
+    height: 200px;
 }
 button {
     margin: 10px;
@@ -190,6 +191,7 @@ button:hover:after {
 .home {
     width: 40px;
     height: 40px;
+    margin: 20px 0;
     background-color: transparent;
 }
 

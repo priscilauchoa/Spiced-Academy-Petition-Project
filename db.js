@@ -44,7 +44,7 @@ exports.getSignatures = () => {
 };
 exports.getUserInfo = (id) => {
     return db.query(
-        `SELECT * FROM users JOIN signatures ON users.id = signatures.user_id JOIN user_profiles ON users.id = user_profiles.user_id WHERE users.id = $1`,
+        `SELECT * FROM users LEFT JOIN signatures ON users.id = signatures.user_id LEFT JOIN user_profiles ON users.id = user_profiles.user_id WHERE users.id = $1`,
         [id]
     );
 };

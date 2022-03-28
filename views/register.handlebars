@@ -1,18 +1,18 @@
-<h1> REGISTER</h1>
+<h1 style="margin-bottom: 40px;"> REGISTER</h1>
 {{err}}
-<div>
+<div class="register">
     {{#if signed}}
      <h2>User not found, plase register yourself</h2>
   {{/if}}
     <form method="POST">
         <label for="first">First Name</label>
-        <input type="text" name="first"></input>
+        <input class="input-list" type="text" name="first"></input>
         <label for="last">Last Name</label>
-        <input type="text" name="last"></input>
+        <input class="input-list" type="text" name="last"></input>
         <label for="email">Email</label>
-        <input type="email" name="email"></input>
+        <input class="input-list" type="email" name="email"></input>
         <label for="password">Password</label>
-        <input type="password" name="password"></input>
+        <input class="input-list" type="password" name="password"></input>
         {{! <input name="password" value="trustno1" /> }}
         
     <div class="div-button">

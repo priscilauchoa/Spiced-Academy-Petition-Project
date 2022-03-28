@@ -1,21 +1,25 @@
 <h1> Signatures </h1>
 <div>
     <br />
-    <div><h2>Meet all Signers</h2></div>
+    <div><h2 style="text-align: center;">Meet all Signers</h2></div>
     <div><a href="">
             <div class="signatures-list">
                 <ul>
                     {{#rows}}
                         <li class="signers-list">
-                            <a style="text-decoration: none;" href="/{{url}}">
+                            <a href="/{{url}}">
+                                ✅
                                 {{first}}
                                 {{last}}</a>
+                            -
                             {{age}}
+                            Years old
 
-                            <a
-                                style="text-decoration: none;"
-                                href="signers/{{city}}"
-                            >{{city}}</a>
+                            <a href="signers/{{city}}">
+                                - Lives in
+                                {{city}}
+                                🌎</a>
+
                         </li>
                     {{/rows}}
                 </ul>

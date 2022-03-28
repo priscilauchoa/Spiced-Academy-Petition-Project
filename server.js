@@ -200,7 +200,8 @@ app.post("/edit", (req, res) => {
                 req.body.age,
                 req.body.city,
                 req.body.url
-            ).then(() => {
+            ).then((rows) => {
+                console.log("rowss 7 ***-->", rows);
                 res.redirect("/edit/done");
             });
         })
@@ -218,10 +219,6 @@ app.get("/edit/done", (req, res) => {
         layout: "main",
     });
 });
-
-// editProfile = (
-//     user_id,
-// first, last, email, password, age, city, url;
 
 app.get("/signers", requireLoggedInUser, requireSignature, (req, res) => {
     db.getSignatures().then(({ rows }) => {
