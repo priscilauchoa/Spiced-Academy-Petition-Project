@@ -17,11 +17,6 @@ CREATE TABLE signatures (
     user_id     INTEGER NOT NULL UNIQUE REFERENCES users(id),
     signature   TEXT 
 );
-    -- signature   TEXT NOT NULL CHECK (signature != '')
-
-
-
--- ambigous quando as duas tabelas tem o mesmo nome  vc precisa ser mais clara por exemplo: singers.id (coluna id na tabela singers)
 
 CREATE TABLE user_profiles(
 id SERIAL PRIMARY KEY,

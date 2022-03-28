@@ -36,7 +36,7 @@ app.use(express.static("./public"));
 //     console.log("hashpass", hashPass);
 // });
 
-app.get("/home", (req, res) => {
+app.get("/", (req, res) => {
     let logged = req.session.userId;
     res.render("home", {
         logged,
@@ -51,7 +51,8 @@ app.post("/register", requireLoggedOutUser, (req, res) => {
     const { first, last, email, password } = req.body;
     hash(password)
         .then((hashedPassword) => {
-            db.registerUser(first, last, email, hashedPassword)
+            return db
+                .registerUser(first, last, email, hashedPassword)
                 .then(({ rows }) => {
                     console.log(rows);
                     req.session.userId = rows[0].id;

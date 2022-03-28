@@ -45,8 +45,10 @@ label {
 
 body {
     font-size: 25px;
-    background-color: rgb(115, 216, 174);
+    background-color: rgb(187, 240, 218);
+    cursor: url("./pen.png"), default;
     color: white;
+    color: #2ea15a;
 }
 
 .logout {
@@ -73,20 +75,48 @@ body {
     background-color: rgb(202, 227, 241);
 }
 button {
-    background-color: #a430c7; /* Green */
-    border-radius: 3px violet;
-    color: white;
-    padding: 16px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 17px;
     margin: 10px;
-    transition-duration: 0.4s;
+    font-size: 16px;
+    font-weight: 200;
+    letter-spacing: 1px;
+    padding: 13px 20px 13px;
+    outline: 0;
+    border: 1px solid black;
     cursor: pointer;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+button:after {
+    content: "";
+    color: white;
+
+    background-color: #5acf87;
+    width: 100%;
+    z-index: -1;
+    position: absolute;
+    height: 100%;
+    top: 7px;
+    left: 7px;
+    transition: 0.2s;
+}
+
+button:hover:after {
+    top: 0px;
+    left: 0px;
+}
+
+@media (min-width: 768px) {
+    button {
+        padding: 13px 50px 13px;
+    }
 }
 .div-button {
     display: flex;
+
     justify-content: space-between;
     margin: 40px 0;
 }
