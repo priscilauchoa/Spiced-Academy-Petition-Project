@@ -2,7 +2,6 @@ const db = require("./db");
 const express = require("express");
 const app = express();
 const { engine } = require("express-handlebars");
-const secrets = require("./secret");
 const cookieSession = require("cookie-session");
 const { compare, hash } = require("./bc");
 const {
@@ -12,9 +11,12 @@ const {
     requireSignature,
 } = require("./middleware");
 
+const sessionSecret =
+    process.env.SESS_SECRET || require("./secret.json").SESS_SECRET;
+
 app.use(
     cookieSession({
-        secret: secrets.SESSION_SECRET,
+        secret: sessionSecret,
         maxAge: 1000 * 60 * 60 * 24 * 14,
         sameSite: true,
     })
@@ -36,7 +38,7 @@ app.use(express.static("./public"));
 //     console.log("hashpass", hashPass);
 // });
 
-app.get("/", (req, res) => {
+app.get("/home", (req, res) => {
     let logged = req.session.userId;
     res.render("home", {
         logged,
