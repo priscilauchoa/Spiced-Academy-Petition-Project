@@ -11,6 +11,7 @@ const {
     requireSignature,
 } = require("./middleware");
 
+// console.log("db --->", db);
 const sessionSecret =
     process.env.SESS_SECRET || require("./secret.json").SESS_SECRET;
 
@@ -37,7 +38,9 @@ app.use(express.static("./public"));
 // hash("oi").then((hashPass) => {
 //     console.log("hashpass", hashPass);
 // });
-
+app.get("/", (req, res) => {
+    res.redirect("/home");
+});
 app.get("/home", (req, res) => {
     let logged = req.session.userId;
     res.render("home", {
