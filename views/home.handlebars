@@ -1,20 +1,20 @@
-    <div><h2> HOME </h2></div>
+    {{!-- <div><h2> HOME </h2></div> --}}
  
  <div class="home-menu">{{#if logged}} 
-       <a href="/edit">Edit Profile</a><br>
+       <a   style="margin: 30px 50px; text-decoration: none;" href="/edit">Edit Profile 🔧</a><br>
 
-       <a href="/petition">My Signature</a><br>
-                <form method="POST" action="/home/logout">
+       <a style="text-decoration: none;" href="/petition">My Signature ✍️</a><br>
+                {{!-- <form method="POST" action="/home/logout">
                     <button id="logout">logout</button>
-                </form>
+                </form> --}}
 
         {{else}}
         <a href="/register">Register</a><br /><br /><a href="/login">Login</a><br /><br />
        {{/if}}
-       </div>
+</div>
 <div>
-    <h3>💚 Sign our Petition to make Guinness vegetarian / vegan friendly 💚</3>
-<div class="not-cool"></div>
+    <h3>💚 🍻 Sign our Petition to make Guinness vegetarian / vegan friendly🍻 💚</3>
+<div class="beyonce"><div class="not-cool"></div></div>
 
     <p>Guinness uses isinglass in its production, derived from the swim bladders
         of fish. The isinglass helps the sediment settle faster, and is not used

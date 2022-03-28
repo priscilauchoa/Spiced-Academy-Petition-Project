@@ -6,13 +6,16 @@
             <div class="signatures-list">
                 <ul>
                     {{#rows}}
-                        <li>
-                            <a href="/{{url}}">
+                        <li class="signers-list">
+                            <a style="text-decoration: none;" href="/{{url}}">
                                 {{first}}
                                 {{last}}</a>
                             {{age}}
 
-                            <a href="signers/{{city}}">{{city}}</a>
+                            <a
+                                style="text-decoration: none;"
+                                href="signers/{{city}}"
+                            >{{city}}</a>
                         </li>
                     {{/rows}}
                 </ul>

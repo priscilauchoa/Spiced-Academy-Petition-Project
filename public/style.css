@@ -7,7 +7,7 @@ html {
     font-weight: lighter;
 }
 canvas {
-    border: solid violet;
+    border: 1px solid rgb(255, 255, 255);
     margin: 20px 0;
 }
 
@@ -18,14 +18,16 @@ canvas {
     justify-content: space-between;
 }
 #logout {
-    background-color: Transparent;
-    background-repeat: no-repeat;
+    /* background-color: Transparent;
+    background-repeat: no-repeat; */
+    /* background-image: url("./logout.png"); */
     border: none;
+    width: 40px;
     cursor: pointer;
     color: white;
     text-decoration: underline;
-    overflow: hidden;
-    outline: none;
+    /* overflow: hidden;
+    outline: none; */
 }
 #logout:after {
     content: "";
@@ -35,7 +37,7 @@ canvas {
 
 a {
     color: white;
-    padding: 10px;
+    /* padding: 10px; */
 }
 main {
     display: flex;
@@ -51,7 +53,11 @@ main {
 
 .nav-main {
     padding: 0%;
+    display: flex;
     margin: 20px 0;
+    justify-content: space-between;
+    /* background-color: rgba(0, 0, 0, 0.301); */
+    border-radius: 5px;
 }
 h1 {
     font-weight: lighter;
@@ -69,6 +75,11 @@ p {
     text-align: center;
     font-size: 20px;
 }
+.beyonce {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
 
 .not-cool {
     margin: 20px;
@@ -82,8 +93,8 @@ p {
     padding: 0;
     background-size: cover;
     background-position: center;
-    width: 600px;
-    height: 500px;
+    width: 500px;
+    height: 400px;
     background-image: url("./thanks.gif");
 }
 
@@ -109,13 +120,18 @@ body {
     background-size: cover;
     color: white;
 }
+.signatures-list {
+    margin: 10px;
+}
+.see-all {
+    text-decoration: none;
+}
 
 .sign-img {
-    border: solid rgb(99, 19, 99) 2px;
+    border: 1px solid rgb(255, 255, 255) 2px;
     width: 300px;
-    height: 200px;
-    margin: 20px 0;
-    background-color: rgb(202, 227, 241);
+    height: 100px;
+    margin: 40px 0;
 }
 button {
     margin: 10px;
@@ -172,8 +188,8 @@ button:hover:after {
 }
 
 .home {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     background-color: transparent;
 }
 
@@ -182,4 +198,14 @@ input {
     background-color: transparent;
     border-bottom: 1px solid white;
     margin: 2px;
+    height: 20px;
+    color: white;
+}
+
+ul {
+    list-style-type: none;
+}
+
+li {
+    padding: 1px;
 }

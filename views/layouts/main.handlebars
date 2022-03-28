@@ -7,13 +7,17 @@
         <title>Petition</title>
     </head>
 
-    <body style="margin:50px">
+    <body>
         <nav class="nav-main">
             <a href="/home"><img
                     class="home"
                     src="https://icon-library.com/images/house-icon-white/house-icon-white-22.jpg"
                     alt=""
                 /></a>
+            {{#if logged}}
+                <form method="POST" action="/home/logout">
+                    <button style="text-align: end;" id="logout">logout</button>
+                </form>{{/if}}
         </nav>
         <main>
             {{{body}}}

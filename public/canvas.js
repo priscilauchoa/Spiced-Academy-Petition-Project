@@ -23,7 +23,7 @@
         if (!draw) {
             return;
         }
-        c.strokeStyle = "violet";
+        c.strokeStyle = "white";
         c.lineTo(e.offsetX, e.offsetY);
         c.moveTo(x, y);
         c.stroke();
