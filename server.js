@@ -56,17 +56,19 @@ app.post("/register", requireLoggedOutUser, (req, res) => {
     const { first, last, email, password } = req.body;
     hash(password)
         .then((hashedPassword) => {
-            db.registerUser(first, last, email, hashedPassword)
-                .then(({ rows }) => {
+            db.registerUser(first, last, email, hashedPassword).then(
+                ({ rows }) => {
                     console.log(rows);
                     req.session.userId = rows[0].id;
                     console.log(req.session);
                     res.redirect("/profile");
-                })
-                .catch((err) => console.log("err in registeruser", err));
+                }
+            );
         })
         .catch((err) => {
-            console.log("error submitting registration values", err);
+            res.render("register", {
+                err: "User already exists",
+            });
         });
 });
 
@@ -108,9 +110,9 @@ app.get("/profile", requireLoggedInUser, (req, res) => {
 });
 
 app.post("/profile", (req, res) => {
-    const { age, city, homepage } = req.body;
+    const { age, city, url } = req.body;
 
-    db.registerMoreInfo(req.session.userId, age, city, homepage)
+    db.registerMoreInfo(req.session.userId, age, city, url)
         .then(() => {
             // console.log(req.session);
             res.redirect("/petition");
@@ -175,7 +177,7 @@ app.get("/thanks", requireLoggedInUser, requireSignature, (req, res) => {
     });
 });
 
-app.get("/edit", requireLoggedInUser, requireSignature, (req, res) => {
+app.get("/edit", requireLoggedInUser, (req, res) => {
     console.log("req.session.userId", req.session.userId);
     db.getUserInfo(req.session.userId).then(({ rows }) => {
         res.render("edit", {
@@ -198,7 +200,7 @@ app.post("/edit", (req, res) => {
                 req.body.city,
                 req.body.url
             ).then(() => {
-                res.redirect("/edit");
+                res.redirect("/edit/done");
             });
         })
         .catch((e) => {
@@ -209,11 +211,18 @@ app.post("/edit", (req, res) => {
         });
 });
 
+app.get("/edit/done", (req, res) => {
+    console.log("edit done page get");
+    res.render("editdone", {
+        layout: "main",
+    });
+});
+
 // editProfile = (
 //     user_id,
-// first, last, email, password, age, city, homepage;
+// first, last, email, password, age, city, url;
 
-app.get("/signers", requireSignature, (req, res) => {
+app.get("/signers", requireLoggedInUser, requireSignature, (req, res) => {
     db.getSignatures().then(({ rows }) => {
         // console.log("ALL SIGNERS ---->", rows.length);
         res.render("signers", {
@@ -226,7 +235,7 @@ app.get("/signers/:city", requireSignature, (req, res) => {
     db.signersCity(req.params.city).then(({ rows }) => {
         res.render("signersbycities", {
             rows: rows,
-            layout: "signerscity",
+            // layout: "signerscity",
             // link: req.body.url,
         });
     });
