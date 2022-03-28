@@ -72,13 +72,6 @@ exports.registerMoreInfo = (user_id, age, city, url) => {
     );
 };
 
-// exports.getUserInfo = (user_id) => {
-//     return db.query(
-//         `SELECT * FROM users JOIN signatures ON users.id = signatures.user_id JOIN user_profiles ON users.id = user_profiles.user_id`,
-//         [user_id]
-//     );
-// };
-
 exports.editUser = (user_id, first, last, email) => {
     return db.query(
         `UPDATE users SET first = $2, last = $3, email = $4 WHERE users.id = $1`,

@@ -108,7 +108,7 @@ app.get("/profile", requireLoggedInUser, (req, res) => {
     res.render("profile");
 });
 
-app.post("/profile", (req, res) => {
+app.post("/profile", requireLoggedInUser, (req, res) => {
     const { age, city, url } = req.body;
 
     db.registerMoreInfo(req.session.userId, age, city, url)
@@ -177,8 +177,9 @@ app.get("/thanks", requireLoggedInUser, requireSignature, (req, res) => {
 });
 
 app.get("/edit", requireLoggedInUser, (req, res) => {
-    console.log("req.session.userId", req.session.userId);
+    // console.log("req.session.userId", req.session.userId);
     db.getUserInfo(req.session.userId).then(({ rows }) => {
+        console.log("rows--->>", rows);
         res.render("edit", {
             rows: rows,
         });
