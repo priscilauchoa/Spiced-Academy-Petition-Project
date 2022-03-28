@@ -119,7 +119,7 @@ app.post("/profile", requireLoggedInUser, (req, res) => {
         })
         .catch(() => {
             res.render("profile", {
-                err: "Invalid information, user alredy exists",
+                err: "Invalid information, please try again",
             });
             // console.log("error submitting registration values", err);
             // Re-render the same page with an error message

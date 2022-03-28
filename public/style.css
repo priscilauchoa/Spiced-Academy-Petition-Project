@@ -187,7 +187,12 @@ button:hover:after {
 .signed {
     text-align: center;
 }
-
+.edit-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 .home {
     width: 40px;
     height: 40px;
