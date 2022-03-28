@@ -54,22 +54,21 @@ app.get("/register", requireLoggedOutUser, (req, res) => {
 
 app.post("/register", requireLoggedOutUser, (req, res) => {
     const { first, last, email, password } = req.body;
-    hash(password)
-        .then((hashedPassword) => {
-            db.registerUser(first, last, email, hashedPassword).then(
-                ({ rows }) => {
-                    console.log(rows);
-                    req.session.userId = rows[0].id;
-                    console.log(req.session);
-                    res.redirect("/profile");
-                }
-            );
-        })
-        .catch((err) => {
-            res.render("register", {
-                err: "User already exists",
+    hash(password).then((hashedPassword) => {
+        db.registerUser(first, last, email, hashedPassword)
+            .then(({ rows }) => {
+                console.log(rows);
+                req.session.userId = rows[0].id;
+                console.log(req.session);
+                res.redirect("/profile");
+            })
+            .catch((err) => {
+                console.log("error 6 ---->", err);
+                res.render("register", {
+                    err: "User already exists",
+                });
             });
-        });
+    });
 });
 
 app.get("/login", requireLoggedOutUser, (req, res) => {
