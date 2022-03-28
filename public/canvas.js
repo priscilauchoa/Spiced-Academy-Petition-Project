@@ -16,19 +16,21 @@
         // let dataURL = $("#canvas").get(0).toDataURL();
         // console.log(dataURL);
     };
-    canvas.onmousedown = () => {
+    canvas.onmousedown = (e) => {
         draw = true;
+        x = e.offsetX;
+        y = e.offsetY;
+        c.moveTo(x, y);
     };
     canvas.onmousemove = (e) => {
         if (!draw) {
             return;
         }
-        c.strokeStyle = "white";
-        c.lineTo(e.offsetX, e.offsetY);
-        c.moveTo(x, y);
-        c.stroke();
         x = e.offsetX;
         y = e.offsetY;
+        c.strokeStyle = "white";
+        c.lineTo(x, y);
+        c.stroke();
     };
 
     // submit.addEventListener("click", (e) => {});
