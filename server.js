@@ -158,7 +158,7 @@ app.post(
                     res.redirect("/thanks");
                 })
                 .catch((e) => {
-                    // console.log("error3--->", e);
+                    // console.log("erro4--->", e);
                     res.render("petition", {
                         err: "You already signed",
                     });
@@ -183,6 +183,35 @@ app.get("/edit", requireLoggedInUser, requireSignature, (req, res) => {
         });
     });
 });
+
+app.post("/edit", (req, res) => {
+    db.editUser(
+        req.session.userId,
+        req.body.first,
+        req.body.last,
+        req.body.email
+    )
+        .then(() => {
+            db.editUserProfile(
+                req.session.userId,
+                req.body.age,
+                req.body.city,
+                req.body.url
+            ).then(() => {
+                res.redirect("/edit");
+            });
+        })
+        .catch((e) => {
+            console.log("error5--->", e);
+            res.render("edit", {
+                err: "Issues to save new Informations",
+            });
+        });
+});
+
+// editProfile = (
+//     user_id,
+// first, last, email, password, age, city, homepage;
 
 app.get("/signers", requireSignature, (req, res) => {
     db.getSignatures().then(({ rows }) => {

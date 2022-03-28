@@ -65,10 +65,10 @@ exports.registerUser = (first, last, email, password) => {
     );
 };
 
-exports.registerMoreInfo = (user_id, age, city, homepage) => {
+exports.registerMoreInfo = (user_id, age, city, url) => {
     return db.query(
         `INSERT INTO user_profiles (user_id, age, city, url ) VALUES ($1, $2, $3, $4)`,
-        [user_id, age, city, homepage]
+        [user_id, age, city, url]
     );
 };
 
@@ -78,6 +78,19 @@ exports.registerMoreInfo = (user_id, age, city, homepage) => {
 //         [user_id]
 //     );
 // };
+
+exports.editUser = (user_id, first, last, email) => {
+    return db.query(
+        `UPDATE users SET first = $2, last = $3, email = $4 WHERE users.id = $1`,
+        [user_id, first, last, email]
+    );
+};
+exports.editUserProfile = (user_id, age, city, url) => {
+    return db.query(
+        `UPDATE user_profiles SET age = $2, city = $3, url = $4 WHERE user_profiles.user_id = $1`,
+        [user_id, age, city, url]
+    );
+};
 
 exports.deleteSignature = (user_id) => {
     return db.query(`DELETE FROM signatures WHERE signatures.user_id = $1`, [
