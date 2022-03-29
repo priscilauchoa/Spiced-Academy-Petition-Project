@@ -155,7 +155,7 @@ app.post(
         if (req.body.signature !== "") {
             db.signPetition(req.session.userId, req.body.signature)
                 .then(({ rows }) => {
-                    // zconsole.log("--->>rows in post petition: ", rows);
+                    // console.log("--->>rows in post petition: ", rows);
                     req.session.sigId = rows[0].id;
                     res.redirect("/thanks");
                 })
@@ -165,6 +165,10 @@ app.post(
                         err: "You already signed",
                     });
                 });
+        } else {
+            res.render("petition", {
+                err: "Sign to see our current signers",
+            });
         }
     }
 );
@@ -268,8 +272,3 @@ app.get("*", (req, res) => {
 app.listen(process.env.PORT || 8080, function () {
     console.log("Listening 8080 🚪👂");
 });
-
-// app.listen(8080, console.log("Listening 8080 🚪👂"));
-// if (!(req.session.user.signatureId{
-//     return res.redirect(/petition)
-// }))
